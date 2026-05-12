@@ -232,6 +232,31 @@ const initDatabase = async () => {
             console.log('✅ Sample medications inserted with online images (Kenyan prices in KES)');
         }
 
+        // FIX: Update any existing medications with broken local image paths
+        const updateImages = `
+            UPDATE medications SET image_url = CASE name
+                WHEN 'Amoxicillin' THEN 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=400&fit=crop'
+                WHEN 'Ibuprofen' THEN 'https://images.unsplash.com/photo-1550572017-edd951b55104?w=400&h=400&fit=crop'
+                WHEN 'Paracetamol' THEN 'https://images.unsplash.com/photo-1585435557343-3b092031a831?w=400&h=400&fit=crop'
+                WHEN 'Malaria Kit (ACT)' THEN 'https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=400&h=400&fit=crop'
+                WHEN 'Vitamin C' THEN 'https://images.unsplash.com/photo-1616671276441-2f2c5b7bf6cf?w=400&h=400&fit=crop'
+                WHEN 'Cetirizine' THEN 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=400&h=400&fit=crop'
+                WHEN 'Omeprazole' THEN 'https://images.unsplash.com/photo-1626716495393-1d2fbd760079?w=400&h=400&fit=crop'
+                WHEN 'Zithromax' THEN 'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=400&h=400&fit=crop'
+                WHEN 'Flagyl' THEN 'https://images.unsplash.com/photo-1550572017-edd951b55104?w=400&h=400&fit=crop'
+                WHEN 'Piriton' THEN 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=400&fit=crop'
+                ELSE image_url
+            END
+            WHERE image_url LIKE '/images/%' OR image_url IS NULL
+        `;
+
+        try {
+            const [updateResult] = await connection.query(updateImages);
+            console.log(`✅ Updated ${updateResult.changedRows} medication images to online URLs`);
+        } catch (err) {
+            console.log('Image update note:', err.message);
+        }
+
         console.log('🎉 Database initialization complete!');
         
     } catch (error) {
