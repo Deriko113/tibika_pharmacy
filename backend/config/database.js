@@ -213,23 +213,23 @@ const initDatabase = async () => {
         `);
         console.log('✅ Cart table ready');
 
-        // Insert sample medications if table is empty
+        // Insert sample medications if table is empty - USING ONLINE IMAGE URLs
         const [medCount] = await connection.query('SELECT COUNT(*) as count FROM medications');
         if (medCount[0].count === 0) {
             await connection.query(`
-          INSERT INTO medications (name, generic_name, category, manufacturer, requires_prescription, price, stock_quantity, unit, dosage_form, strength, description, image_url) VALUES
-        ('Amoxicillin', 'Amoxicillin', 'antibiotic', 'GSK', true, 350.00, 500, 'capsule', 'capsule', '500mg', 'Antibiotic for bacterial infections', '/images/amoxicillin.jpg'),
-        ('Ibuprofen', 'Ibuprofen', 'painkiller', 'Pfizer', false, 250.00, 1000, 'tablet', 'tablet', '200mg', 'Pain reliever for headaches and fever', '/images/ibuprofen.jpg'),
-        ('Paracetamol', 'Paracetamol', 'painkiller', 'Generic', false, 100.00, 2000, 'tablet', 'tablet', '500mg', 'Fever and pain relief', '/images/paracetamol.jpg'),
-        ('Malaria Kit (ACT)', 'Artemether/Lumefantrine', 'antimalarial', 'Novartis', true, 850.00, 300, 'tablet', 'tablet', '20/120mg', 'First-line malaria treatment', '/images/malaria-kit.jpg'),
-        ('Vitamin C', 'Ascorbic Acid', 'vitamin', 'Generic', false, 150.00, 500, 'tablet', 'tablet', '500mg', 'Immune system support', '/images/vitamin-c.jpg'),
-        ('Cetirizine', 'Cetirizine', 'antihistamine', 'Johnson & Johnson', false, 180.00, 400, 'tablet', 'tablet', '10mg', 'Antihistamine for allergies', '/images/cetirizine.jpg'),
-        ('Omeprazole', 'Omeprazole', 'other', 'AstraZeneca', false, 220.00, 250, 'capsule', 'capsule', '20mg', 'Proton pump inhibitor for acid reflux', '/images/omeprazole.jpg'),
-        ('Zithromax', 'Azithromycin', 'antibiotic', 'Pfizer', true, 1200.00, 200, 'tablet', 'tablet', '500mg', 'Macrolide antibiotic', '/images/zithromax.jpg'),
-        ('Flagyl', 'Metronidazole', 'antibiotic', 'Sanofi', true, 280.00, 500, 'tablet', 'tablet', '400mg', 'Antibiotic for bacterial infections', '/images/flagyl.jpg'),
-        ('Piriton', 'Chlorpheniramine', 'antihistamine', 'GSK', false, 150.00, 800, 'tablet', 'tablet', '4mg', 'Antihistamine for allergies', '/images/piriton.jpg')      
+                INSERT INTO medications (name, generic_name, category, manufacturer, requires_prescription, price, stock_quantity, unit, dosage_form, strength, description, image_url) VALUES
+                ('Amoxicillin', 'Amoxicillin', 'antibiotic', 'GSK', true, 350.00, 500, 'capsule', 'capsule', '500mg', 'Antibiotic for bacterial infections', 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=400&fit=crop'),
+                ('Ibuprofen', 'Ibuprofen', 'painkiller', 'Pfizer', false, 250.00, 1000, 'tablet', 'tablet', '200mg', 'Pain reliever for headaches and fever', 'https://images.unsplash.com/photo-1550572017-edd951b55104?w=400&h=400&fit=crop'),
+                ('Paracetamol', 'Paracetamol', 'painkiller', 'Generic', false, 100.00, 2000, 'tablet', 'tablet', '500mg', 'Fever and pain relief', 'https://images.unsplash.com/photo-1585435557343-3b092031a831?w=400&h=400&fit=crop'),
+                ('Malaria Kit (ACT)', 'Artemether/Lumefantrine', 'antimalarial', 'Novartis', true, 850.00, 300, 'tablet', 'tablet', '20/120mg', 'First-line malaria treatment', 'https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=400&h=400&fit=crop'),
+                ('Vitamin C', 'Ascorbic Acid', 'vitamin', 'Generic', false, 150.00, 500, 'tablet', 'tablet', '500mg', 'Immune system support', 'https://images.unsplash.com/photo-1616671276441-2f2c5b7bf6cf?w=400&h=400&fit=crop'),
+                ('Cetirizine', 'Cetirizine', 'antihistamine', 'Johnson & Johnson', false, 180.00, 400, 'tablet', 'tablet', '10mg', 'Antihistamine for allergies', 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=400&h=400&fit=crop'),
+                ('Omeprazole', 'Omeprazole', 'other', 'AstraZeneca', false, 220.00, 250, 'capsule', 'capsule', '20mg', 'Proton pump inhibitor for acid reflux', 'https://images.unsplash.com/photo-1626716495393-1d2fbd760079?w=400&h=400&fit=crop'),
+                ('Zithromax', 'Azithromycin', 'antibiotic', 'Pfizer', true, 1200.00, 200, 'tablet', 'tablet', '500mg', 'Macrolide antibiotic', 'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=400&h=400&fit=crop'),
+                ('Flagyl', 'Metronidazole', 'antibiotic', 'Sanofi', true, 280.00, 500, 'tablet', 'tablet', '400mg', 'Antibiotic for bacterial infections', 'https://images.unsplash.com/photo-1550572017-edd951b55104?w=400&h=400&fit=crop'),
+                ('Piriton', 'Chlorpheniramine', 'antihistamine', 'GSK', false, 150.00, 800, 'tablet', 'tablet', '4mg', 'Antihistamine for allergies', 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=400&fit=crop')
             `);
-            console.log('✅ Sample medications inserted (Kenyan prices in KES)');
+            console.log('✅ Sample medications inserted with online images (Kenyan prices in KES)');
         }
 
         console.log('🎉 Database initialization complete!');
