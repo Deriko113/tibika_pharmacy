@@ -5,13 +5,20 @@ const env = require('./getEnv');
 dotenv.config();
 
 const pool = mysql.createPool({
-    host: env().DB_HOST || 'localhost',
-    user: env().DB_USER || 'tibika_user',
-    password: env().DB_PASSWORD || 'tibika123',
-    database: env().DB_NAME || 'tibika_pharmacy',
+    host: env().DB_HOST || 'turntable.proxy.rlwy.net',
+    port: env().DB_PORT || 21741,
+    user: env().DB_USER || 'root',
+    password: env().DB_PASSWORD,
+    database: env().DB_NAME || 'railway',
+
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
+
+    ssl: {
+        rejectUnauthorized: false
+    },
+
     enableKeepAlive: true,
     keepAliveInitialDelay: 0
 });
