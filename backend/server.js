@@ -43,7 +43,6 @@ if (process.env.NODE_ENV !== 'production') {
 // LOCAL DEVELOPMENT ONLY
 if (process.env.NODE_ENV !== 'production') {
     const PORT = 3000;
-    console.log(env().DB_HOST);
     app.listen(PORT, () => {
         console.log(`🚀 Server running on http://localhost:${PORT}`);
     });
