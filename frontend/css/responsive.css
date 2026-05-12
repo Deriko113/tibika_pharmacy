@@ -1,0 +1,166 @@
+/* Mobile First Approach */
+@media (max-width: 576px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.2rem; }
+    
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .navbar .container {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+    }
+    
+    .modal-content {
+        width: 95%;
+        padding: 1rem;
+    }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1025px) {
+    .grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Cross-browser text size adjustment */
+/* Allows users to zoom while maintaining readability */
+
+
+/* Prevent auto-zoom on input focus in iOS (better UX) */
+@media screen and (max-width: 768px) {
+    input, 
+    select, 
+    textarea, 
+    button {
+        font-size: 16px;
+    }
+}
+
+/* Ensure proper scaling on all devices */
+* {
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+}
+
+/* Smooth scrolling for better UX */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Print Styles */
+@media print {
+    .navbar, 
+    .cart-summary, 
+    .btn, 
+    .no-print {
+        display: none;
+    }
+    
+    body {
+        background: white;
+        font-size: 12pt;
+    }
+    
+    .container {
+        margin: 0;
+        padding: 0;
+        max-width: 100%;
+    }
+    
+    a {
+        text-decoration: none;
+        color: black;
+    }
+}
+
+/* Handle landscape orientation on mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .navbar .container {
+        flex-direction: row;
+    }
+    
+    .hero-section {
+        padding: 30px 0;
+    }
+    
+    .modal-content {
+        max-height: 80vh;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .btn-primary {
+        border: 2px solid currentColor;
+    }
+    
+    .medication-card {
+        border: 1px solid currentColor;
+    }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a2e;
+        color: #eee;
+    }
+    
+    .medication-card,
+    .cart-items,
+    .cart-summary,
+    .card {
+        background-color: #16213e;
+        color: #eee;
+    }
+    
+    .form-control {
+        background-color: #0f3460;
+        color: #eee;
+        border-color: #1a1a2e;
+    }
+    
+    .navbar {
+        background-color: #0f3460;
+    }
+    
+    .nav-links a {
+        color: #eee;
+    }
+}
