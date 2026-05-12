@@ -3,62 +3,71 @@ const { pool } = require('../config/database');
 // Get all medications (public)
 exports.getAllMedications = async (req, res) => {
     try {
-        const { search, category, requiresPrescription, page = 1, limit = 20 } = req.query;
-        const offset = (parseInt(page) - 1) * parseInt(limit);
-        
+        const { search, category, requiresPrescription } = req.query;
+
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 20;
+        const offset = (page - 1) * limit;
+
         let query = 'SELECT * FROM medications WHERE 1=1';
         const params = [];
-        
+
         if (search) {
             query += ' AND (name LIKE ? OR generic_name LIKE ? OR description LIKE ?)';
             const searchTerm = `%${search}%`;
             params.push(searchTerm, searchTerm, searchTerm);
         }
-        
+
         if (category && category !== 'all') {
             query += ' AND category = ?';
             params.push(category);
         }
-        
+
         if (requiresPrescription === 'true') {
             query += ' AND requires_prescription = 1';
         } else if (requiresPrescription === 'false') {
             query += ' AND requires_prescription = 0';
         }
-        
-        // Get total count
-        const [countResult] = await pool.query(
-            query.replace('*', 'COUNT(*) as total'),
-            params
-        );
+
+        // FIXED COUNT QUERY (IMPORTANT)
+        const countQuery = `SELECT COUNT(*) as total FROM medications WHERE 1=1`
+            + (search ? ' AND (name LIKE ? OR generic_name LIKE ? OR description LIKE ?)' : '')
+            + (category && category !== 'all' ? ' AND category = ?' : '')
+            + (requiresPrescription === 'true'
+                ? ' AND requires_prescription = 1'
+                : requiresPrescription === 'false'
+                ? ' AND requires_prescription = 0'
+                : '');
+
+        const [countResult] = await pool.query(countQuery, params);
         const total = countResult[0].total;
-        
-        // Get paginated results
+
         query += ' ORDER BY name ASC LIMIT ? OFFSET ?';
-        params.push(parseInt(limit), offset);
-        
+        params.push(limit, offset);
+
         const [medications] = await pool.query(query, params);
-        
-        // Send raw price numbers (no currency symbol)
-        const formattedMedications = medications.map(med => ({
-            ...med,
-            price: parseFloat(med.price)
-        }));
-        
+
         res.json({
             success: true,
-            data: formattedMedications,
+            data: medications.map(m => ({
+                ...m,
+                price: Number(m.price)
+            })),
             currency: 'KES',
             pagination: {
-                page: parseInt(page),
-                limit: parseInt(limit),
+                page,
+                limit,
                 total,
-                totalPages: Math.ceil(total / parseInt(limit))
+                totalPages: Math.ceil(total / limit)
             }
         });
+
     } catch (error) {
         console.error('Get medications error:', error);
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({
+            success: false,
+            message: 'Server error'
+        });
     }
 };
 

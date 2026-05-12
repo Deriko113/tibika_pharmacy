@@ -2,8 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const dotenv = require('dotenv');
-const { initDatabase } = require('./config/database');
-const getEnv = require('./config/getEnv');
 
 dotenv.config();
 
@@ -33,33 +31,23 @@ app.get('/health', (req, res) => {
     });
 });
 
-// SPA support
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/index.html'));
-});
+// IMPORTANT: DO NOT use initDatabase on Vercel
+if (process.env.NODE_ENV !== 'production') {
+    const { initDatabase } = require('./config/database');
 
-// Initialize database
-const initialize = async () => {
-    try {
-        await initDatabase();
-        console.log('✅ Database connected successfully');
-    } catch (error) {
-        console.error('❌ Database initialization error:', error);
-    }
-};
-
-initialize();
+    initDatabase()
+        .then(() => console.log('✅ DB initialized (dev only)'))
+        .catch(err => console.error('DB init error:', err));
+}
 
 // LOCAL DEVELOPMENT ONLY
 if (process.env.NODE_ENV !== 'production') {
     const PORT = process.env.PORT || 3000;
 
     app.listen(PORT, () => {
-        console.log(`\n=================================`);
         console.log(`🚀 Server running on http://localhost:${PORT}`);
-        console.log(`=================================\n`);
     });
 }
 
-// IMPORTANT FOR VERCEL
+// VERCEL EXPORT
 module.exports = app;
