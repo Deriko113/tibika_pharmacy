@@ -5,11 +5,11 @@ const env = require('./getEnv');
 dotenv.config();
 
 const pool = mysql.createPool({
-    host: env().DB_HOST || 'turntable.proxy.rlwy.net',
-    port: env().DB_PORT || 21741,
-    user: env().DB_USER || 'root',
+    host: env().DB_HOST,
+    port: env().DB_PORT,
+    user: env().DB_USER,
     password: env().DB_PASSWORD,
-    database: env().DB_NAME || 'railway',
+    database: env().DB_NAME,
 
     waitForConnections: true,
     connectionLimit: 10,

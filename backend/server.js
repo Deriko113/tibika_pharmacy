@@ -1,9 +1,9 @@
+require('dotenv/config');
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const dotenv = require('dotenv');
+const env = require('./config/getEnv');
 
-dotenv.config();
 
 const app = express();
 
@@ -42,8 +42,8 @@ if (process.env.NODE_ENV !== 'production') {
 
 // LOCAL DEVELOPMENT ONLY
 if (process.env.NODE_ENV !== 'production') {
-    const PORT = process.env.PORT || 3000;
-
+    const PORT = 3000;
+    console.log(env().DB_HOST);
     app.listen(PORT, () => {
         console.log(`🚀 Server running on http://localhost:${PORT}`);
     });
