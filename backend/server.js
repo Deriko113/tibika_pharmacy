@@ -14,7 +14,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files from frontend folder
+// Serve static files
 app.use(express.static(path.join(__dirname, '../frontend')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -27,29 +27,39 @@ app.use('/api/prescriptions', require('./routes/prescriptionRoutes'));
 
 // Health check
 app.get('/health', (req, res) => {
-    res.json({ status: 'OK', timestamp: new Date() });
+    res.json({
+        status: 'OK',
+        timestamp: new Date()
+    });
 });
 
-// For any other route, serve index.html (SPA support)
+// SPA support
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
-const startServer = async () => {
+// Initialize database
+const initialize = async () => {
     try {
-        if ([getEnv().NODE_ENV === 'development']) {
-            await initDatabase();
-        app.listen(3000, () => {
-            console.log(`\n=================================`);
-            console.log(`🚀 Server running on http://localhost:3000`);
-            console.log(`📱 Open this URL in your browser`);
-            console.log(`=================================\n`);
-        });
-        }
+        await initDatabase();
+        console.log('✅ Database connected successfully');
     } catch (error) {
-        console.error('Failed to start server:', error);
-        process.exit(1);
+        console.error('❌ Database initialization error:', error);
     }
 };
 
-startServer();
+initialize();
+
+// LOCAL DEVELOPMENT ONLY
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 3000;
+
+    app.listen(PORT, () => {
+        console.log(`\n=================================`);
+        console.log(`🚀 Server running on http://localhost:${PORT}`);
+        console.log(`=================================\n`);
+    });
+}
+
+// IMPORTANT FOR VERCEL
+module.exports = app;
